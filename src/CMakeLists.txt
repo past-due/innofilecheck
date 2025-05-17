@@ -30,6 +30,8 @@ if (MSVC)
 	target_compile_options(filecheck_unicode PRIVATE "/GS-")
 	# *Do* explicitly link to kernel32.lib and user32.lib, which are required
 	target_link_libraries(filecheck_unicode PRIVATE kernel32 user32)
+	# Ensure DEP and ASLR
+	set_property(TARGET filecheck_unicode APPEND_STRING PROPERTY "LINK_FLAGS" " /NXCOMPAT /DYNAMICBASE")
 endif()
 
 ###########################
