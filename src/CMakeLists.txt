@@ -40,6 +40,7 @@ set_target_properties(filecheck_unicode PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELE
 set_target_properties(filecheck_unicode PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}")
 set_target_properties(filecheck_unicode PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}")
 set_target_properties(filecheck_unicode PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}")
+set_target_properties(filecheck_unicode PROPERTIES OUTPUT_NAME "innofilecheck")
 
 if (MSVC)
 	# Do not link the CRT (or any default libs)
