@@ -14,6 +14,25 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES main.cpp codesigncheck.cpp crt.cpp utils.cpp versioninfo.cpp)
 
+# File VERSIONINFO
+if (NOT DEFINED PROJECT_VERSION_MAJOR OR "${PROJECT_VERSION_MAJOR}" STREQUAL "")
+	set(PROJECT_VERSION_MAJOR 1)
+endif()
+if (NOT DEFINED PROJECT_VERSION_MINOR OR "${PROJECT_VERSION_MINOR}" STREQUAL "")
+	set(PROJECT_VERSION_MINOR 0)
+endif()
+if (NOT DEFINED PROJECT_VERSION_PATCH OR "${PROJECT_VERSION_PATCH}" STREQUAL "")
+	set(PROJECT_VERSION_PATCH 0)
+endif()
+if (NOT DEFINED PROJECT_VERSION_REVISION OR "${PROJECT_VERSION_REVISION}" STREQUAL "")
+	set(PROJECT_VERSION_REVISION 0)
+endif()
+set(VERINFO_PRODUCTVERSION "${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},${PROJECT_VERSION_PATCH},${PROJECT_VERSION_REVISION}")
+set(VERINFO_PRODUCTVERSION_STR "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_REVISION}")
+set (_rc_file "${CMAKE_CURRENT_BINARY_DIR}/innofilecheck.rc")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/innofilecheck.rc.in" "${_rc_file}" @ONLY)
+list(APPEND SOURCE_FILES "${_rc_file}")
+
 # Unicode DLL
 add_library(filecheck_unicode MODULE ${SOURCE_FILES})
 target_compile_definitions(filecheck_unicode PRIVATE "UNICODE" "_UNICODE")
@@ -21,7 +40,6 @@ set_target_properties(filecheck_unicode PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELE
 set_target_properties(filecheck_unicode PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}")
 set_target_properties(filecheck_unicode PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}")
 set_target_properties(filecheck_unicode PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}")
-install(TARGETS filecheck_unicode COMPONENT Plugins DESTINATION ".")
 
 if (MSVC)
 	# Do not link the CRT (or any default libs)
@@ -35,8 +53,10 @@ if (MSVC)
 endif()
 
 ###########################
-# Additional Install Rules
+# Install Rules
 
-# Copy the source files over into the "Source" folder
-file(GLOB SRC_FILES "*.txt" "*.cpp" "*.c" "*.h")
-INSTALL(FILES ${SRC_FILES} COMPONENT "src" DESTINATION "src")
+install(TARGETS filecheck_unicode COMPONENT Plugins DESTINATION ".")
+
+# Copy the source files over into the "src" folder
+file(GLOB SRC_FILES "*.txt" "*.cpp" "*.c" "*.h" "*.rc" "*.in")
+INSTALL(FILES ${SRC_FILES} COMPONENT Source DESTINATION "src")
