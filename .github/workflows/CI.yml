@@ -128,12 +128,12 @@ jobs:
       # Name the zip file based on the platform-name & repo info:
       #   innofilecheck-<BUILD_DESC>.zip
       run: |
-        cmd /c 7z a "innofilecheck-$($env:BUILD_DESC).zip" "${{github.workspace}}\install\*"
+        cmd /c 7z a "innofilecheck_$($env:BUILD_DESC).zip" "${{github.workspace}}\install\*"
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       if: success()
       with:
         name: innofilecheck_win_${{matrix.architecture}}
-        path: '${{github.workspace}}\innofilecheck-*.zip'
+        path: '${{github.workspace}}\innofilecheck_*.zip'
         if-no-files-found: 'error'
